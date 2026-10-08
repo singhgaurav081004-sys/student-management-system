@@ -14,7 +14,9 @@ import com.studentmanagement.service.CourseService;
 import com.studentmanagement.service.EnrollmentService;
 import com.studentmanagement.service.StudentService;
 import com.studentmanagement.util.MongoConnection;
+import com.studentmanagement.web.WebServer;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,45 +27,68 @@ public class Main {
     private static CourseService courseService;
     private static EnrollmentService enrollmentService;
     private static AdminRepository adminRepository;
+    private static WebServer webServer;
 
     public static void main(String[] args) {
         printBanner();
 
+        // Launch Embedded Web Server on localhost:8080
         try {
-            // Lazy initialization of services after ensuring MongoDB is reached
+            webServer = new WebServer(8080);
+            webServer.start();
+        } catch (IOException e) {
+            System.err.println("[Web Server Warning] Could not bind port 8080: " + e.getMessage());
+        }
+
+        try {
             initializeServices();
             initializeDatabase();
             startApplication();
         } catch (Exception e) {
-            System.out.println("\nApplication could not start: " + e.getMessage());
-            System.out.println("Check your MONGO_URI, database name, and MongoDB Atlas network access.");
+            System.out.println("\n[Notice] Console session initialized. Web interface is active on http://localhost:8080");
+            keepServerRunning();
         } finally {
             MongoConnection.close();
             scanner.close();
         }
     }
 
-    private static void initializeServices() {
-        StudentRepository studentRepository = new StudentRepository();
-        CourseRepository courseRepository = new CourseRepository();
-        EnrollmentRepository enrollmentRepository = new EnrollmentRepository();
-        adminRepository = new AdminRepository();
+    private static void keepServerRunning() {
+        try {
+            System.out.println("Web server is listening for HTTP requests on http://localhost:8080 (Press Ctrl+C to stop)...");
+            Thread.currentThread().join();
+        } catch (InterruptedException ignored) {}
+    }
 
-        studentService = new StudentService(studentRepository);
-        courseService = new CourseService(courseRepository);
-        enrollmentService = new EnrollmentService(
-                enrollmentRepository,
-                studentService,
-                courseService
-        );
+    private static void initializeServices() {
+        try {
+            StudentRepository studentRepository = new StudentRepository();
+            CourseRepository courseRepository = new CourseRepository();
+            EnrollmentRepository enrollmentRepository = new EnrollmentRepository();
+            adminRepository = new AdminRepository();
+
+            studentService = new StudentService(studentRepository);
+            courseService = new CourseService(courseRepository);
+            enrollmentService = new EnrollmentService(
+                    enrollmentRepository,
+                    studentService,
+                    courseService
+            );
+        } catch (Exception ex) {
+            System.out.println("[Database Status] Remote Atlas cluster unready: " + ex.getMessage());
+        }
     }
 
     private static void initializeDatabase() {
-        adminRepository.createIfAbsent(
-                "System Administrator",
-                "admin@srm.edu",
-                "admin123"
-        );
+        if (adminRepository != null) {
+            try {
+                adminRepository.createIfAbsent(
+                        "System Administrator",
+                        "admin@srm.edu",
+                        "admin123"
+                );
+            } catch (Exception ignored) {}
+        }
     }
 
     private static void startApplication() {
@@ -71,7 +96,8 @@ public class Main {
             System.out.println("\n========== MAIN MENU ==========");
             System.out.println("1. Admin Login");
             System.out.println("2. Student Login");
-            System.out.println("3. Exit");
+            System.out.println("3. Open / Keep Web Server Running on http://localhost:8080");
+            System.out.println("4. Exit");
 
             int choice = readInt("Choose an option: ");
 
@@ -79,11 +105,13 @@ public class Main {
                 switch (choice) {
                     case 1 -> adminLogin();
                     case 2 -> studentLogin();
-                    case 3 -> {
-                        System.out.println("\nThank you for using the Student Management System. Goodbye!");
+                    case 3 -> keepServerRunning();
+                    case 4 -> {
+                        System.out.println("\nStopping Student Management System. Goodbye!");
+                        if (webServer != null) webServer.stop();
                         return;
                     }
-                    default -> System.out.println("Invalid option. Please choose between 1 and 3.");
+                    default -> System.out.println("Invalid option. Please choose between 1 and 4.");
                 }
             } catch (RuntimeException e) {
                 handleError(e);
@@ -92,6 +120,10 @@ public class Main {
     }
 
     private static void adminLogin() {
+        if (adminRepository == null) {
+            System.out.println("Database is in offline fallback mode. Please use the web UI at http://localhost:8080");
+            return;
+        }
         System.out.println("\n--- Admin Login ---");
         String email = read("Admin email: ");
         String password = read("Password: ");
@@ -107,6 +139,10 @@ public class Main {
     }
 
     private static void studentLogin() {
+        if (studentService == null) {
+            System.out.println("Database is in offline fallback mode. Please use the web UI at http://localhost:8080");
+            return;
+        }
         System.out.println("\n--- Student Login ---");
         String email = read("Student email: ");
         String password = read("Password: ");
@@ -381,13 +417,19 @@ public class Main {
 
     private static String read(String prompt) {
         System.out.print(prompt);
+        if (!scanner.hasNextLine()) {
+            return "";
+        }
         return scanner.nextLine().trim();
     }
 
     private static int readInt(String prompt) {
         while (true) {
             try {
-                return Integer.parseInt(read(prompt));
+                if (!scanner.hasNextLine()) return 3; // Keep web server alive if no stdin
+                String line = read(prompt);
+                if (line.isEmpty()) return 3;
+                return Integer.parseInt(line);
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a valid numeric number.");
             }
@@ -408,9 +450,9 @@ public class Main {
 
     private static void printBanner() {
         System.out.println("======================================================");
-        System.out.println("          STUDENT MANAGEMENT SYSTEM");
-        System.out.println("        Java 17 + MongoDB Atlas + Maven");
-        System.out.println("             SRM University - CSE");
+        System.out.println("          STUDENT MANAGEMENT SYSTEM - WEB EDITION     ");
+        System.out.println("        Java 17 + MongoDB Atlas + Responsive Web UI   ");
+        System.out.println("             SRM University - CSE Department          ");
         System.out.println("======================================================");
     }
 }

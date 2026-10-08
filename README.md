@@ -110,3 +110,9 @@ On initial startup, the database automatically initializes the default administr
 - **Business Logic & Validation Suite:** Run `com.studentmanagement.SystemTestSuite` (validates models, email regex, academic year boundaries, course capacity logic, and custom exceptions).
 - **MongoDB Connection Check:** Run `com.studentmanagement.MongoConnectionTest`.
 - **Student Repository Integration Test:** Run `com.studentmanagement.StudentRepositoryTest`.
+
+## ?? Live Web Application & Vercel Deployment
+
+- **Live Production URL:** [https://sms-delta-eight.vercel.app](https://sms-delta-eight.vercel.app)
+- **Local Web Server:** Run mvn exec:java -Dexec.mainClass="com.studentmanagement.web.WebServer" to serve the web UI at http://localhost:8081.
+- **Frontend Stack:** Vanilla JS, CSS3 Design Tokens, Dark Mode, Responsive Tables, Stat Cards, and LocalStorage client-side persistence for standalone deployment.

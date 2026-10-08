@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="StudentHub - Modern academic ERP and student management system powered by Java 17, MongoDB Atlas, and a responsive web architecture.">
+  <title>StudentHub | Academic Management Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Toast Notifications -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <div class="logo-box">
+          <div class="logo-icon">S</div>
+          <div class="logo-text">
+            <span class="logo-title">Student<strong>Hub</strong></span>
+            <span class="logo-subtitle">Academic ERP Platform</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Main Navigation">
+        <button class="nav-link active" id="navDashboard" data-tab="dashboard" onclick="switchTab('dashboard')">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-link" id="navStudents" data-tab="students" onclick="switchTab('students')">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Students</span>
+          <span class="nav-badge" id="badgeStudents">0</span>
+        </button>
+        <button class="nav-link" id="navCourses" data-tab="courses" onclick="switchTab('courses')">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span>Course Catalog</span>
+          <span class="nav-badge" id="badgeCourses">0</span>
+        </button>
+        <button class="nav-link" id="navEnrollments" data-tab="enrollments" onclick="switchTab('enrollments')">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span>Enrollments</span>
+          <span class="nav-badge" id="badgeEnrollments">0</span>
+        </button>
+        <button class="nav-link" id="navArchitecture" data-tab="architecture" onclick="switchTab('architecture')">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          <span>System & Architecture</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-card">
+          <div class="user-avatar">GS</div>
+          <div class="user-info">
+            <span class="user-name">Gaurav Singh</span>
+            <span class="user-role">Administrator · SRM</span>
+          </div>
+        </div>
+        <div class="system-meta">
+          <span>Java 17 LTS · MongoDB Atlas</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content" id="mainContent">
+      <!-- Top App Bar -->
+      <header class="topbar">
+        <div class="topbar-title-group">
+          <span class="topbar-pretitle">CAMPUS ACADEMIC SYSTEM</span>
+          <h1 class="topbar-title" id="pageHeading">Executive Dashboard</h1>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="status-indicator-pill" id="systemStatusPill" title="Server status">
+            <span class="status-pulse-dot"></span>
+            <span id="systemStatusText">System Online : localhost:8080</span>
+          </div>
+
+          <button class="btn btn-secondary btn-icon" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+            <svg id="themeIconSun" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg id="themeIconMoon" class="icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+
+          <button class="btn btn-secondary" id="seedDataBtn" onclick="seedSampleData()" title="Load Sample Students, Courses & Enrollments">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>Load Demo Data</span>
+          </button>
+
+          <button class="btn btn-primary" id="btnQuickAddStudent" onclick="openStudentModal()">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>+ Add Student</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- TAB 1: DASHBOARD -->
+      <section class="tab-content active" id="tab-dashboard">
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+          <div class="hero-content">
+            <span class="hero-tag">SRM UNIVERSITY · CSE DEPT</span>
+            <h2 class="hero-headline">Academic Operations &<br>Student Lifecycle Portal</h2>
+            <p class="hero-description">Manage student records, browse course capacity in real-time, process course enrollments, and evaluate grades through an enterprise layered Java backend.</p>
+            <div class="hero-cta-group">
+              <button class="btn btn-primary" onclick="switchTab('students')">Browse Students</button>
+              <button class="btn btn-glass" onclick="switchTab('enrollments')">Enrollment Portal</button>
+            </div>
+          </div>
+          <div class="hero-decorations">
+            <div class="floating-badge badge-top">
+              <span class="badge-label">Active Engine</span>
+              <span class="badge-value">Java 17 LTS</span>
+            </div>
+            <div class="floating-badge badge-bottom">
+              <span class="badge-label">Data Store</span>
+              <span class="badge-value" id="heroDbStatus">MongoDB Atlas</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI Metric Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card" id="kpiStudentsCard">
+            <div class="kpi-header">
+              <span class="kpi-title">Total Students</span>
+              <div class="kpi-icon-wrap icon-indigo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpiStudentCount">0</div>
+            <div class="kpi-footer">
+              <span class="kpi-badge badge-positive">Registered records</span>
+              <span class="kpi-subtext">Active student profiles</span>
+            </div>
+          </div>
+
+          <div class="kpi-card" id="kpiCoursesCard">
+            <div class="kpi-header">
+              <span class="kpi-title">Active Courses</span>
+              <div class="kpi-icon-wrap icon-cyan">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpiCourseCount">0</div>
+            <div class="kpi-footer">
+              <span class="kpi-badge badge-neutral">Catalog size</span>
+              <span class="kpi-subtext">Department offerings</span>
+            </div>
+          </div>
+
+          <div class="kpi-card" id="kpiEnrollmentsCard">
+            <div class="kpi-header">
+              <span class="kpi-title">Total Registrations</span>
+              <div class="kpi-icon-wrap icon-emerald">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpiEnrollmentCount">0</div>
+            <div class="kpi-footer">
+              <span class="kpi-badge badge-positive">Enrollment ledger</span>
+              <span class="kpi-subtext">Historical registrations</span>
+            </div>
+          </div>
+
+          <div class="kpi-card" id="kpiActiveCard">
+            <div class="kpi-header">
+              <span class="kpi-title">Active Enrollments</span>
+              <div class="kpi-icon-wrap icon-amber">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpiActiveCount">0</div>
+            <div class="kpi-footer">
+              <span class="kpi-badge badge-warning">Live seats taken</span>
+              <span class="kpi-subtext">Currently studying</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions & Architecture Summary -->
+        <div class="dashboard-split-grid">
+          <!-- Quick Operations Panel -->
+          <div class="card panel-card">
+            <div class="card-header">
+              <h3 class="card-title">Quick Operations</h3>
+              <p class="card-subtitle">One-click administrative actions</p>
+            </div>
+            <div class="quick-action-grid">
+              <button class="action-tile" id="tileAddStudent" onclick="openStudentModal()">
+                <div class="tile-icon icon-indigo">＋</div>
+                <div class="tile-text">
+                  <strong>Register Student</strong>
+                  <small>Add new student record</small>
+                </div>
+              </button>
+              <button class="action-tile" id="tileAddCourse" onclick="openCourseModal()">
+                <div class="tile-icon icon-cyan">＋</div>
+                <div class="tile-text">
+                  <strong>Create Course</strong>
+                  <small>Add catalog course offering</small>
+                </div>
+              </button>
+              <button class="action-tile" id="tileEnroll" onclick="switchTab('enrollments')">
+                <div class="tile-icon icon-emerald">↗</div>
+                <div class="tile-text">
+                  <strong>Enroll Student</strong>
+                  <small>Register student for a course</small>
+                </div>
+              </button>
+              <button class="action-tile" id="tileSearch" onclick="switchTab('students')">
+                <div class="tile-icon icon-amber">⌕</div>
+                <div class="tile-text">
+                  <strong>Search Directory</strong>
+                  <small>Filter students by roll or dept</small>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Architecture & Flow Panel -->
+          <div class="card panel-card">
+            <div class="card-header">
+              <h3 class="card-title">Tiered Architecture Flow</h3>
+              <p class="card-subtitle">Decoupled separation of concerns</p>
+            </div>
+            <div class="arch-flow-diagram">
+              <div class="flow-step">
+                <div class="flow-pill">Web UI Client</div>
+                <span class="flow-desc">HTML5 · CSS3 · Vanilla JS (Port 8080)</span>
+              </div>
+              <div class="flow-arrow">↓ REST HTTP Requests</div>
+              <div class="flow-step">
+                <div class="flow-pill">Embedded HTTP Server</div>
+                <span class="flow-desc">Java 17 com.sun.net.httpserver.HttpServer</span>
+              </div>
+              <div class="flow-arrow">↓ Data Validation & Coordination</div>
+              <div class="flow-step">
+                <div class="flow-pill">Service Layer</div>
+                <span class="flow-desc">StudentService · CourseService · EnrollmentService</span>
+              </div>
+              <div class="flow-arrow">↓ Atomic Document Operations</div>
+              <div class="flow-step">
+                <div class="flow-pill">Repository & MongoDB Atlas</div>
+                <span class="flow-desc">MongoConnection with Resilient Fallback</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: STUDENTS DIRECTORY -->
+      <section class="tab-content" id="tab-students">
+        <div class="section-toolbar">
+          <div class="search-box-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="studentSearchInput" class="form-input search-input" placeholder="Search students by name, roll number, or department..." oninput="handleStudentSearch(this.value)">
+          </div>
+          <button class="btn btn-primary" id="btnAddStudentTab" onclick="openStudentModal()">+ Register Student</button>
+        </div>
+
+        <div class="card table-card">
+          <div class="table-responsive">
+            <table class="data-table" id="studentsTable">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Roll Number</th>
+                  <th>Department</th>
+                  <th>Year</th>
+                  <th>Courses Enrolled</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+          <div id="studentsEmptyState" class="empty-state hidden">
+            <div class="empty-icon">👥</div>
+            <h4>No students found</h4>
+            <p>No matching student records found. Try a different search term or add a new student.</p>
+            <button class="btn btn-primary" onclick="openStudentModal()">+ Register Student</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: COURSE CATALOG -->
+      <section class="tab-content" id="tab-courses">
+        <div class="section-toolbar">
+          <div class="toolbar-info">
+            <h3 class="toolbar-title">Active Course Catalog</h3>
+            <p class="toolbar-desc">Real-time seat capacity, credits, and instructor tracking</p>
+          </div>
+          <button class="btn btn-primary" id="btnAddCourseTab" onclick="openCourseModal()">+ Create Course Offering</button>
+        </div>
+
+        <div class="courses-grid" id="coursesGrid">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div id="coursesEmptyState" class="empty-state hidden">
+          <div class="empty-icon">📚</div>
+          <h4>No courses available</h4>
+          <p>The course catalog is currently empty.</p>
+          <button class="btn btn-primary" onclick="openCourseModal()">+ Create First Course</button>
+        </div>
+      </section>
+
+      <!-- TAB 4: ENROLLMENTS & GRADES -->
+      <section class="tab-content" id="tab-enrollments">
+        <div class="enrollment-management-grid">
+          <!-- Enroll New Student Form -->
+          <div class="card enrollment-form-card">
+            <div class="card-header">
+              <h3 class="card-title">Enroll Student into Course</h3>
+              <p class="card-subtitle">Atomic seat check and duplicate prevention</p>
+            </div>
+            <form id="enrollmentForm" onsubmit="handleEnrollmentSubmit(event)">
+              <div class="form-group">
+                <label for="enrollStudentSelect" class="form-label">Select Student *</label>
+                <select id="enrollStudentSelect" class="form-select" required>
+                  <option value="">-- Choose Student --</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="enrollCourseSelect" class="form-label">Select Course *</label>
+                <select id="enrollCourseSelect" class="form-select" required>
+                  <option value="">-- Choose Course --</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block" id="btnSubmitEnrollment">
+                Confirm Enrollment
+              </button>
+            </form>
+          </div>
+
+          <!-- Enrollments Ledger Table -->
+          <div class="card table-card">
+            <div class="card-header">
+              <h3 class="card-title">Enrollment Ledger</h3>
+              <p class="card-subtitle">Manage grades and academic standing</p>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table" id="enrollmentsTable">
+                <thead>
+                  <tr>
+                    <th>Enrollment Ref</th>
+                    <th>Student</th>
+                    <th>Course</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Grade</th>
+                    <th class="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="enrollmentsTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+            <div id="enrollmentsEmptyState" class="empty-state hidden">
+              <div class="empty-icon">📝</div>
+              <h4>No enrollments registered</h4>
+              <p>Enroll a student using the form on the left to see registrations here.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: ARCHITECTURE & SYSTEM -->
+      <section class="tab-content" id="tab-architecture">
+        <div class="system-grid">
+          <div class="card panel-card">
+            <div class="card-header">
+              <h3 class="card-title">Database & System Configuration</h3>
+              <p class="card-subtitle">Runtime environment details</p>
+            </div>
+            <div class="meta-details-list">
+              <div class="meta-row">
+                <span class="meta-label">Application Version</span>
+                <span class="meta-value">v1.0.0 (Web Edition)</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Java Version</span>
+                <span class="meta-value">OpenJDK 17 LTS</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">HTTP Server Engine</span>
+                <span class="meta-value">Embedded JDK HttpServer (Port 8080)</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Database Mode</span>
+                <span class="meta-value badge-positive" id="sysDbMode">MongoDB Atlas Cloud / Resilient Cache</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Default Administrator</span>
+                <span class="meta-value">admin@srm.edu</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card panel-card">
+            <div class="card-header">
+              <h3 class="card-title">RESTful API Endpoints</h3>
+              <p class="card-subtitle">Available endpoints on localhost:8080</p>
+            </div>
+            <div class="api-endpoint-list">
+              <div class="api-item"><span class="http-tag get">GET</span> <code>/api/dashboard</code> <small>Metrics & KPIs</small></div>
+              <div class="api-item"><span class="http-tag get">GET</span> <code>/api/students</code> <small>List / Search students</small></div>
+              <div class="api-item"><span class="http-tag post">POST</span> <code>/api/students</code> <small>Create student</small></div>
+              <div class="api-item"><span class="http-tag put">PUT</span> <code>/api/students/{id}</code> <small>Update student</small></div>
+              <div class="api-item"><span class="http-tag delete">DELETE</span> <code>/api/students/{id}</code> <small>Delete student</small></div>
+              <div class="api-item"><span class="http-tag get">GET</span> <code>/api/courses</code> <small>List courses</small></div>
+              <div class="api-item"><span class="http-tag post">POST</span> <code>/api/courses</code> <small>Create course offering</small></div>
+              <div class="api-item"><span class="http-tag get">GET</span> <code>/api/enrollments</code> <small>List enrollments</small></div>
+              <div class="api-item"><span class="http-tag post">POST</span> <code>/api/enrollments</code> <small>Enroll student in course</small></div>
+              <div class="api-item"><span class="http-tag patch">PATCH</span> <code>/api/enrollments/{id}</code> <small>Assign grade / status</small></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL: ADD / EDIT STUDENT -->
+  <div class="modal-backdrop" id="studentModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="studentModalTitle">Register New Student</h3>
+        <button class="modal-close" onclick="closeStudentModal()" aria-label="Close modal">×</button>
+      </div>
+      <form id="studentForm" onsubmit="handleStudentFormSubmit(event)">
+        <input type="hidden" id="studentFormId">
+        <div class="form-group">
+          <label for="studentNameInput" class="form-label">Full Name *</label>
+          <input type="text" id="studentNameInput" class="form-input" placeholder="e.g. Gaurav Singh" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="studentEmailInput" class="form-label">Email Address *</label>
+            <input type="email" id="studentEmailInput" class="form-input" placeholder="e.g. gaurav@srm.edu" required>
+          </div>
+          <div class="form-group">
+            <label for="studentRollInput" class="form-label">Roll Number *</label>
+            <input type="text" id="studentRollInput" class="form-input" placeholder="e.g. RA2511026001" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="studentDeptInput" class="form-label">Department *</label>
+            <select id="studentDeptInput" class="form-select" required>
+              <option value="CSE(AIML)">Computer Science & Engineering (AI/ML)</option>
+              <option value="CSE">Computer Science & Engineering</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="ECE">Electronics & Communication</option>
+              <option value="Data Science">Data Science</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="studentYearInput" class="form-label">Academic Year (1-4) *</label>
+            <input type="number" id="studentYearInput" class="form-input" min="1" max="4" value="2" required>
+          </div>
+        </div>
+        <div class="form-group" id="studentPasswordGroup">
+          <label for="studentPasswordInput" class="form-label">Password *</label>
+          <input type="password" id="studentPasswordInput" class="form-input" placeholder="Set a student password" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeStudentModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveStudent">Save Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD / EDIT COURSE -->
+  <div class="modal-backdrop" id="courseModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="courseModalTitle">Create Course Offering</h3>
+        <button class="modal-close" onclick="closeCourseModal()" aria-label="Close modal">×</button>
+      </div>
+      <form id="courseForm" onsubmit="handleCourseFormSubmit(event)">
+        <input type="hidden" id="courseFormMode" value="create">
+        <div class="form-group">
+          <label for="courseIdInput" class="form-label">Course Code / ID *</label>
+          <input type="text" id="courseIdInput" class="form-input" placeholder="e.g. CS101" required>
+        </div>
+        <div class="form-group">
+          <label for="courseNameInput" class="form-label">Course Title *</label>
+          <input type="text" id="courseNameInput" class="form-input" placeholder="e.g. Data Structures & Algorithms" required>
+        </div>
+        <div class="form-group">
+          <label for="courseInstructorInput" class="form-label">Faculty / Instructor *</label>
+          <input type="text" id="courseInstructorInput" class="form-input" placeholder="e.g. Dr. A. Sharma" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="courseCreditsInput" class="form-label">Credits (1-6) *</label>
+            <input type="number" id="courseCreditsInput" class="form-input" min="1" max="6" value="4" required>
+          </div>
+          <div class="form-group">
+            <label for="courseCapacityInput" class="form-label">Seat Capacity *</label>
+            <input type="number" id="courseCapacityInput" class="form-input" min="1" max="500" value="60" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeCourseModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveCourse">Save Course</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: UPDATE ENROLLMENT (GRADE / STATUS) -->
+  <div class="modal-backdrop" id="gradeModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Update Enrollment Evaluation</h3>
+        <button class="modal-close" onclick="closeGradeModal()" aria-label="Close modal">×</button>
+      </div>
+      <form id="gradeForm" onsubmit="handleGradeFormSubmit(event)">
+        <input type="hidden" id="gradeEnrollmentId">
+        <div class="form-group">
+          <label class="form-label">Student & Course</label>
+          <div id="gradeModalSummary" class="meta-row" style="background: var(--surface-secondary); padding: 10px; border-radius: 8px;"></div>
+        </div>
+        <div class="form-group">
+          <label for="gradeSelect" class="form-label">Grade</label>
+          <select id="gradeSelect" class="form-select">
+            <option value="Not Assigned">Not Assigned</option>
+            <option value="A">Grade A (Outstanding)</option>
+            <option value="B">Grade B (Good)</option>
+            <option value="C">Grade C (Satisfactory)</option>
+            <option value="D">Grade D (Pass)</option>
+            <option value="F">Grade F (Fail)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="statusSelect" class="form-label">Status</label>
+          <select id="statusSelect" class="form-select">
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="COMPLETED">COMPLETED</option>
+            <option value="DROPPED">DROPPED</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeGradeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Evaluation</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

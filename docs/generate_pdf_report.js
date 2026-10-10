@@ -27,6 +27,7 @@ async function generatePdf() {
   const imgFig5_4 = getImgBase64('fig5_4_enrollments_management.png');
   const imgFig5_5 = getImgBase64('fig5_5_grade_evaluation_modal.png');
   const imgFig5_6 = getImgBase64('fig5_6_test_suite_execution.png');
+  const imgLogo = getImgBase64('srm_logo_0.png');
 
   const htmlContent = `
   <!DOCTYPE html>
@@ -175,31 +176,39 @@ async function generatePdf() {
   <body>
 
     <!-- ================= PAGE 1: COVER PAGE ================= -->
-    <div style="min-height: 90vh; display: flex; flex-direction: column; justify-content: space-between;">
+    <div style="min-height: 94vh; display: flex; flex-direction: column; justify-content: space-between; text-align: center; font-family: 'Times New Roman', serif;">
       <div>
-        <h1 class="report-title">STUDENT MANAGEMENT SYSTEM</h1>
-        <h2 class="report-subtitle">ACADEMIC ERP & CLOUD PLATFORM</h2>
-        <h3 class="course-info">21CSC203P/ADVANCED PROGRAMMING PRACTICE<br>PROJECT REPORT</h3>
-        
-        <div class="center-text" style="margin: 40px 0;">
-          <p style="font-size: 12pt; margin-bottom: 6px;">Submitted by</p>
-          <p style="font-size: 14pt; font-weight: bold; margin-bottom: 0;">GAURAV SINGH &nbsp; RA2511026030018</p>
+        <div style="font-size: 15pt; font-weight: bold; margin-top: 15px; margin-bottom: 22px; line-height: 1.35; letter-spacing: 0.5px;">
+          STUDENT MANAGEMENT SYSTEM<br>
+          21CSC203P/ADVANCED PROGRAMMING<br>
+          PRACTICE PROJECT REPORT
         </div>
 
-        <div class="center-text" style="margin: 40px 0;">
-          <p style="font-size: 12pt; margin-bottom: 4px;">Under the guidance of</p>
-          <p style="font-size: 13pt; font-weight: bold; margin-bottom: 4px;">Dr. S. Palanivel</p>
-          <p style="font-size: 11.5pt; color: #334155;">(Associate Professor, Department of Computer Science and Engineering)</p>
+        <div style="margin: 38px 0;">
+          <div style="font-size: 12pt; font-style: italic; margin-bottom: 8px;">Submitted by</div>
+          <div style="font-size: 13pt; font-weight: bold;">GAURAV SINGH RA2511026030018</div>
+        </div>
+
+        <div style="margin: 38px 0;">
+          <div style="font-size: 12pt; margin-bottom: 6px;">Under the guidance of</div>
+          <div style="font-size: 13pt; font-weight: bold; margin-bottom: 6px;">Dr. S. Palanivel</div>
+          <div style="font-size: 11.5pt; line-height: 1.4;">(Associate Professor, Department of<br>Computer Science and Engineering)</div>
         </div>
       </div>
 
-      <div class="center-text" style="margin-bottom: 20px;">
-        <p style="font-size: 11.5pt; margin-bottom: 4px;">in partial fulfilment for the award of the degree of</p>
-        <p style="font-size: 13pt; font-weight: bold; margin-bottom: 4px;">BACHELOR OF TECHNOLOGY</p>
-        <p style="font-size: 11.5pt; margin-bottom: 4px;">in</p>
-        <p style="font-size: 13pt; font-weight: bold; margin-bottom: 25px;">COMPUTER SCIENCE AND ENGINEERING</p>
-        <p style="font-size: 12pt; font-weight: bold; margin-bottom: 4px;">FACULTY OF ENGINEERING AND TECHNOLOGY</p>
-        <p style="font-size: 13pt; font-weight: bold; margin-bottom: 0;">SRM INSTITUTE OF SCIENCE & TECHNOLOGY, DELHI-NCR CAMPUS</p>
+      <div style="margin-bottom: 10px;">
+        <div style="font-size: 11.5pt; font-style: italic; margin-bottom: 4px;">in partial fulfilment for the award of the degree</div>
+        <div style="font-size: 11.5pt; font-style: italic; margin-bottom: 4px;">of</div>
+        <div style="font-size: 13pt; font-weight: bold; margin-bottom: 4px;">BACHELOR OF TECHNOLOGY</div>
+        <div style="font-size: 11.5pt; font-style: italic; margin-bottom: 4px;">in</div>
+        <div style="font-size: 13pt; font-weight: bold; margin-bottom: 14px;">COMPUTER SCIENCE AND ENGINEERING</div>
+        <div style="font-size: 11.5pt; font-style: italic; margin-bottom: 4px;">Of</div>
+        <div style="font-size: 12pt; font-weight: bold; margin-bottom: 8px;">FACULTY OF ENGINEERING AND</div>
+        <div style="margin: 6px 0;">
+          <img src="${imgLogo}" alt="SRM Logo" style="height: 52px; width: auto; border: none; box-shadow: none;">
+        </div>
+        <div style="font-size: 12pt; font-weight: bold; margin-bottom: 24px;">TECHNOLOGY</div>
+        <div style="font-size: 12pt; font-weight: bold;">SRM INSTITUTE OF SCIENCE & TECHNOLOGY, NCR CAMPUS</div>
       </div>
     </div>
 

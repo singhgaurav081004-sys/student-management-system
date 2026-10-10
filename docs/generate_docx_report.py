@@ -148,24 +148,32 @@ def build_report():
             run.font.size = Pt(10.5)
 
     # ================= PAGE 1: TITLE / COVER PAGE =================
-    title_p("STUDENT MANAGEMENT SYSTEM", size=18, bold=True, space_after=6)
-    title_p("ACADEMIC ERP & CLOUD PLATFORM", size=14, bold=True, space_after=18)
-    title_p("21CSC203P/ADVANCED PROGRAMMING PRACTICE\nPROJECT REPORT", size=13, bold=True, space_after=36)
+    title_p("STUDENT MANAGEMENT SYSTEM", size=15, bold=True, space_after=2)
+    title_p("21CSC203P/ADVANCED PROGRAMMING\nPRACTICE PROJECT REPORT", size=13, bold=True, space_after=32)
     
-    title_p("Submitted by", size=12, bold=False, space_after=8)
-    title_p("GAURAV SINGH  RA2511026030018", size=13, bold=True, space_after=36)
+    title_p("Submitted by", size=12, bold=False, space_after=6)
+    title_p("GAURAV SINGH RA2511026030018", size=13, bold=True, space_after=32)
     
-    title_p("Under the guidance of", size=12, bold=False, space_after=8)
+    title_p("Under the guidance of", size=12, bold=False, space_after=6)
     title_p("Dr. S. Palanivel", size=13, bold=True, space_after=2)
-    title_p("(Associate Professor, Department of Computer Science and Engineering)", size=11, bold=False, space_after=36)
+    title_p("(Associate Professor, Department of\nComputer Science and Engineering)", size=11, bold=False, space_after=32)
     
-    title_p("in partial fulfilment for the award of the degree of", size=11, bold=False, space_after=6)
+    title_p("in partial fulfilment for the award of the degree\nof", size=11, bold=False, space_after=4)
     title_p("BACHELOR OF TECHNOLOGY", size=13, bold=True, space_after=4)
     title_p("in", size=11, bold=False, space_after=4)
-    title_p("COMPUTER SCIENCE AND ENGINEERING", size=13, bold=True, space_after=18)
+    title_p("COMPUTER SCIENCE AND ENGINEERING", size=13, bold=True, space_after=12)
+    title_p("Of\nFACULTY OF ENGINEERING AND", size=11.5, bold=True, space_after=6)
     
-    title_p("FACULTY OF ENGINEERING AND TECHNOLOGY", size=12, bold=True, space_after=6)
-    title_p("SRM INSTITUTE OF SCIENCE & TECHNOLOGY, DELHI-NCR CAMPUS", size=13, bold=True, space_after=12)
+    logo_path = os.path.join(screenshots_dir, 'srm_logo_0.png')
+    if os.path.exists(logo_path):
+        p_logo = doc.add_paragraph()
+        p_logo.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p_logo.paragraph_format.space_before = Pt(2)
+        p_logo.paragraph_format.space_after = Pt(4)
+        p_logo.add_run().add_picture(logo_path, width=Inches(1.8))
+        
+    title_p("TECHNOLOGY", size=12, bold=True, space_after=24)
+    title_p("SRM INSTITUTE OF SCIENCE & TECHNOLOGY, NCR CAMPUS", size=12, bold=True, space_after=12)
     doc.add_page_break()
 
     # ================= PAGE 2: BONAFIDE CERTIFICATE =================

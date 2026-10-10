@@ -183,7 +183,7 @@ async function generatePdf() {
         
         <div class="center-text" style="margin: 40px 0;">
           <p style="font-size: 12pt; margin-bottom: 6px;">Submitted by</p>
-          <p style="font-size: 14pt; font-weight: bold; margin-bottom: 0;">GAURAV SINGH &nbsp; RA2411026030097</p>
+          <p style="font-size: 14pt; font-weight: bold; margin-bottom: 0;">GAURAV SINGH &nbsp; RA2511026030018</p>
         </div>
 
         <div class="center-text" style="margin: 40px 0;">
@@ -213,7 +213,7 @@ async function generatePdf() {
 
       <p class="justify-text" style="font-size: 12pt; line-height: 1.6; margin-top: 35px;">
         Certified that this project report titled <strong>STUDENT MANAGEMENT SYSTEM</strong> is the bonafide work of 
-        <strong>GAURAV SINGH (RA2411026030097)</strong> who carried out the project work under my supervision. 
+        <strong>GAURAV SINGH (RA2511026030018)</strong> who carried out the project work under my supervision. 
         Certified further, that to the best of my knowledge the work reported herein does not form any other project 
         report or dissertation on the basis of which a degree or award was conferred on an occasion on this or any other candidate.
       </p>
@@ -252,13 +252,13 @@ async function generatePdf() {
 
       <p class="justify-text" style="font-size: 12pt; line-height: 1.6;">
         I hereby declare that the entire work contained in this project report titled <strong>STUDENT MANAGEMENT SYSTEM</strong> 
-        has been carried out by <strong>GAURAV SINGH (RA2411026030097)</strong> at SRM Institute of Science and Technology, 
+        has been carried out by <strong>GAURAV SINGH (RA2511026030018)</strong> at SRM Institute of Science and Technology, 
         Delhi-NCR, under the guidance of <strong>Dr. S. Palanivel</strong>, Associate Professor, Department of Computer Science and Engineering.
       </p>
 
       <div style="margin-top: 140px; text-align: right;">
         <p style="font-weight: bold; line-height: 1.5;">
-          GAURAV SINGH (RA2411026030097)<br>
+          GAURAV SINGH (RA2511026030018)<br>
           Department of Computer Science & Engineering<br>
           SRM Institute of Science and Technology, Delhi-NCR
         </p>

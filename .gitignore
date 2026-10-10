@@ -6,3 +6,6 @@ target/
 .env.*
 !.env.example
 .DS_Store
+
+docs/node_modules/
+docs/test.*
